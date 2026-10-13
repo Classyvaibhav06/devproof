@@ -21,17 +21,19 @@ const MOCK_USER = {
   name: "Vaibhav",
   username: "classyvaibhav06",
   github_username: "Classyvaibhav06",
+  leetcode_username: "ev7utG9eiZ",
   xp: 2750,
   streak: 7,
-  challenges_solved: 23,
+  challenges_solved: 15,
   projects_shipped: 4,
   rank: 42,
 };
 
 const RECENT_CHALLENGES = [
-  { title: "Two Sum", difficulty: "easy" as const, xp: 50, solved_at: "2h ago" },
-  { title: "Longest Substring Without Repeating Characters", difficulty: "medium" as const, xp: 100, solved_at: "1d ago" },
-  { title: "Median of Two Sorted Arrays", difficulty: "hard" as const, xp: 200, solved_at: "3d ago" },
+  { title: "Reverse String", difficulty: "easy" as const, xp: 50, solved_at: "Recent" },
+  { title: "Median of Two Sorted Arrays", difficulty: "hard" as const, xp: 200, solved_at: "Recent" },
+  { title: "Add Two Numbers", difficulty: "medium" as const, xp: 100, solved_at: "Recent" },
+  { title: "Two Sum", difficulty: "easy" as const, xp: 50, solved_at: "Verified" },
 ];
 
 const RECENT_SHIPS = [
@@ -158,7 +160,7 @@ export default function DashboardPage() {
           label="Challenges"
           value={MOCK_USER.challenges_solved}
           icon={<Code2 size={14} />}
-          sublabel="3 this week"
+          sublabel="@ev7utG9eiZ on LeetCode"
         />
         <StatCard
           label="Projects"
