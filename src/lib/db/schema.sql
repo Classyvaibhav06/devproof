@@ -19,41 +19,57 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
 );
 
--- ─── Auth (Better Auth compatible) ───────────────────────────
-CREATE TABLE IF NOT EXISTS sessions (
-  id         TEXT PRIMARY KEY,
-  user_id    TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  token      TEXT UNIQUE NOT NULL,
-  expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
-  ip_address TEXT,
-  user_agent TEXT
+-- ─── Better Auth Tables ──────────────────────────────────────
+CREATE TABLE IF NOT EXISTS "user" (
+  "id" TEXT PRIMARY KEY,
+  "name" TEXT NOT NULL,
+  "email" TEXT UNIQUE NOT NULL,
+  "emailVerified" BOOLEAN NOT NULL DEFAULT false,
+  "image" TEXT,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+  "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+  "username" TEXT,
+  "bio" TEXT,
+  "github_username" TEXT,
+  "leetcode_username" TEXT,
+  "xp" INTEGER DEFAULT 0,
+  "streak" INTEGER DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS accounts (
-  id                   TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  user_id              TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  provider             TEXT NOT NULL,
-  provider_account_id  TEXT NOT NULL,
-  access_token         TEXT,
-  refresh_token        TEXT,
-  expires_at           BIGINT,
-  token_type           TEXT,
-  scope                TEXT,
-  id_token             TEXT,
-  created_at           TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
-  updated_at           TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
-  UNIQUE (provider, provider_account_id)
+CREATE TABLE IF NOT EXISTS "session" (
+  "id" TEXT PRIMARY KEY,
+  "expiresAt" TIMESTAMP WITH TIME ZONE NOT NULL,
+  "token" TEXT UNIQUE NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+  "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+  "ipAddress" TEXT,
+  "userAgent" TEXT,
+  "userId" TEXT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS verifications (
-  id         TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  identifier TEXT NOT NULL,
-  value      TEXT NOT NULL,
-  expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
+CREATE TABLE IF NOT EXISTS "account" (
+  "id" TEXT PRIMARY KEY,
+  "accountId" TEXT NOT NULL,
+  "providerId" TEXT NOT NULL,
+  "userId" TEXT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
+  "accessToken" TEXT,
+  "refreshToken" TEXT,
+  "idToken" TEXT,
+  "accessTokenExpiresAt" TIMESTAMP WITH TIME ZONE,
+  "refreshTokenExpiresAt" TIMESTAMP WITH TIME ZONE,
+  "scope" TEXT,
+  "password" TEXT,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+  "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS "verification" (
+  "id" TEXT PRIMARY KEY,
+  "identifier" TEXT NOT NULL,
+  "value" TEXT NOT NULL,
+  "expiresAt" TIMESTAMP WITH TIME ZONE NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+  "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
 );
 
 -- ─── Challenges ───────────────────────────────────────────────
